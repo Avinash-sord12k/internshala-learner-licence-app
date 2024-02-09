@@ -7,6 +7,8 @@ import { useAlert } from '@/components/extras/Alert';
 import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
 import loginResolver from '@/resolvers/LoginResolver'
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useSignInMutation } from '@/store/api/auth';
+import { useRouter } from 'next/navigation';
 
 const LoginForm = () => {
 
@@ -14,25 +16,28 @@ const LoginForm = () => {
 
   const {
     register,
-    handleSubmit, formState: {
-      isLoading, errors } } = useForm({
+    handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(loginResolver),
       });
 
   const { setAlert } = useAlert();
+  const [logIn, { isLoading, error }] = useSignInMutation();
+  const router = useRouter();
 
-  const handleLogin = async (data: any) => {
+  const handleLogin = (data: any) => {
     console.log("--> submitted data: ", data);
-    const result = await fetch('/api/auth/login', {
-      body: JSON.stringify(data),
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    logIn(data).unwrap().then((res: any) => {
+      console.log("--> res: ", res);
+      router.push('/');
+    }).catch((err: any) => {
+      console.log("--> err: ", err);
+      setAlert({
+        text: err?.message ?? "Invalid username or password",
+        severity: 'error',
+      })
     });
-
-    console.log(result);
   }
+
 
   return (
     <form onSubmit={handleSubmit(handleLogin)} style={{
@@ -78,11 +83,11 @@ const LoginForm = () => {
       </Box>
       <Box>
         <Button fullWidth variant='contained' type='submit'
-          disabled={false}
+          disabled={isLoading}
         >
           Login
           <CircularProgress sx={{
-            display: false ? 'inline-block' : 'none',
+            display: isLoading ? 'inline-block' : 'none',
             marginLeft: '1rem',
             color: 'white',
           }} size={20} />

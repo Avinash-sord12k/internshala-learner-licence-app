@@ -2,13 +2,13 @@ import { prop, getModelForClass } from "@typegoose/typegoose";
 
 export class User {
 
-  @prop()
+  @prop({ required: true, unique: true })
   email!: string;
 
-  @prop()
+  @prop({ required: true })
   password!: string;
 
-  @prop()
+  @prop({ required: true, unique: true })
   firstName?: string;
 
   @prop()
@@ -17,7 +17,7 @@ export class User {
   @prop()
   address?: string;
 
-  @prop()
+  @prop({ required: true })
   mobileNumber?: string;
 }
 

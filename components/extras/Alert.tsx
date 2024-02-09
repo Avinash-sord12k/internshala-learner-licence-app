@@ -1,7 +1,8 @@
 "use client";
 import { Alert, Box, IconButton } from '@mui/material';
-import React, { useState, createContext, useContext, useEffect, useRef } from 'react';
+import React, { useState, createContext, useContext, useEffect, useRef, useMemo } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+import { AnimatePresence, motion } from 'framer-motion';
 
 // Define the alert props
 interface AlertProps {
@@ -36,12 +37,23 @@ const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     }
   }, [alert]);
 
+  const memoizedValue = useMemo(() => ({ alert, setAlert }), [alert, setAlert]);
+
   return (
-    <AlertContext.Provider value={{ alert, setAlert }}>
+    <AlertContext.Provider value={memoizedValue}>
       {children}
-      {alert && (
-        <CustomAlert severity={alert.severity} text={alert.text} setAlert={setAlert} />
-      )}
+      <AnimatePresence>
+        {alert && (
+          <motion.div // Wrap the CustomAlert component with motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <CustomAlert severity={alert.severity} text={alert.text} setAlert={setAlert} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </AlertContext.Provider>
   );
 };
@@ -64,33 +76,46 @@ const CustomAlert: React.FC<AlertProps & { setAlert: React.Dispatch<React.SetSta
     setAlert(null); // Set the alert to null to close it
   };
 
+
+  let borderColor;
+  if (severity === 'success') {
+    borderColor = 'green';
+  } else if (severity === 'error') {
+    borderColor = 'red';
+  } else if (severity === 'warning') {
+    borderColor = 'yellow';
+  } else {
+    borderColor = 'blue';
+  }
+
+
   return (
     <Box
-    sx={(theme) => ({
-      position: 'fixed',
-      top: '30px',
-      left: '50%',
-      transform: `translate(-50%, ${text ? '10%' : '-300%'})`,
-      transition: 'transform 0.3s ease-in-out',
-      zIndex: 9999,
-      width: '90%',
-      [theme.breakpoints.up('sm')]: {
-        width: '50%',
-      },
-      [theme.breakpoints.up('md')]: {
-        width: '500px',
-      },
-    })}
+      sx={(theme) => ({
+        position: 'fixed',
+        top: '30px',
+        left: '50%',
+        transform: `translate(-50%, ${text ? '10%' : '-300%'})`,
+        transition: 'transform 0.3s ease-in-out',
+        zIndex: 9999,
+        width: '90%',
+        [theme.breakpoints.up('sm')]: {
+          width: '50%',
+        },
+        [theme.breakpoints.up('md')]: {
+          width: '500px',
+        },
+      })}
     >
-      <Alert 
+      <Alert
         sx={{
           width: '100%',
-          borderLeft: `5px solid ${severity === 'success' ? 'green' : severity === 'error' ? 'red' : severity === 'warning' ? 'yellow' : 'blue'}`,
+          borderLeft: `5px solid ${borderColor}`,
           '& .MuiAlert-icon': {
             fontSize: '1.5rem',
           },
         }}
-        elevation={3} 
+        elevation={3}
         severity={severity}
         action={
           <IconButton color="inherit" size="small" onClick={handleClose}>

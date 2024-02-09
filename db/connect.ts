@@ -21,3 +21,22 @@ export async function connect() {
     process.exit(1); // Exit with a non-zero code to indicate an error
   }
 }
+
+let isConnected: any;
+
+export async function cahchedConnect() {
+  if (isConnected) {
+    console.log('=> using existing database connection');
+    return Promise.resolve();
+  }
+
+  const DB_URI = process.env.DB_URL || 'mongodb://localhost:27017/nextjs-mongodb';
+
+  console.log('=> using new database connection');
+  return mongoose.connect(DB_URI, {
+    bufferCommands: false
+  })
+    .then(db => {
+      isConnected = db.connections[0].readyState;
+    });
+};

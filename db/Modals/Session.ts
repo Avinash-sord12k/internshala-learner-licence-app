@@ -1,35 +1,17 @@
-import { SessionType } from "@/types/Session.types"
-import mongoose from "mongoose"
+import { getModelForClass, prop } from "@typegoose/typegoose";
+import { User } from "./User";
 
+class Session {
+  @prop({ ref: () => User, required: true })
+  public userId!: string;
 
-const SessionSchema = new mongoose.Schema<SessionType>(
-  {
-    // userId: {
-    //   type: String,
-    //   required: true,
-    // },
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Users',
-      required: true,
-    },
-    jwt: {
-      type: String,
-      required: true,
-    },
-    expiresAt: {
-      type: Date,
-      required: true,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
+  @prop({ required: true })
+  public jwt!: string;
 
+  @prop({ required: true })
+  public expiresAt!: Date;
+}
 
-const SessionModal = mongoose.models?.Sessions || mongoose.model("Sessions", SessionSchema);
+const SessionModel = getModelForClass(Session);
 
-export default SessionModal;
-
-
+export default SessionModel;

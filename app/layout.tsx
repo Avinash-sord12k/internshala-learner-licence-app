@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ThemeRegistry from '@/theme/ThemeRegistry'
+import AppProvider from "@/store/provider";
 
 
 export const metadata: Metadata = {
@@ -15,11 +16,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <ThemeRegistry >
-        <body>
-          {children}
-        </body>
-      </ThemeRegistry>
+      <AppProvider>
+        <ThemeRegistry >
+          <body>
+            {children}
+          </body>
+        </ThemeRegistry>
+      </AppProvider>
     </html>
   );
 }

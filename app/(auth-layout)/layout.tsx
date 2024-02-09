@@ -9,10 +9,13 @@ const AuthLayout = ({ children }: {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      height: '100vh'
+      height: '100vh',
+      backgroundColor: '#ffffff',
+      // opacity: '0.3',
+      background: 'repeating-linear-gradient(45deg, #52b20250, #52b20250 5px, #52b20220 5px, #52b20220 25px)',
     }}>
       {children}
-    </Box>
+    </Box >
   )
 }
 
