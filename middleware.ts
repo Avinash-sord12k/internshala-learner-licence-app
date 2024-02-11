@@ -1,17 +1,27 @@
+import { jwtDecrypt, jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middelware(req: NextRequest, res: NextResponse) {
 
   console.log('>> middleware >> req.url', req.nextUrl.pathname);
 
-  // const token = req.cookies.get('token')?.value;
-  // console.log('-> token', token);
+  const token = req.cookies.get('token')?.value;
+  console.log('-> token: ', token);
 
-  // // if there is no cookie, redirect to login
-  // if (!token) {
-  //   console.log('-> no cookie');
-  //   return NextResponse.redirect(`${req.nextUrl.origin}/login`);
-  // }
+  if (!token) {
+    console.log('-> no cookie');
+    return NextResponse.redirect(`${req.nextUrl.origin}/login`);
+  }
+
+  const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+
+  if (!secret) {
+    console.log('-> no secret');
+    return NextResponse.redirect(`${req.nextUrl.origin}/login`);
+  }
+
+  const dataInToken = await jwtVerify(token, secret);
+  console.log('-> dataInToken: ', dataInToken);
 
   return NextResponse.next();
 

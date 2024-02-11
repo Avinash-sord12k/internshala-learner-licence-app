@@ -1,13 +1,13 @@
 "use client"
-import { Box, Button, CircularProgress, IconButton } from '@mui/material'
-import React from 'react'
-import { useForm } from 'react-hook-form';
-import Input from '@/components/shared/Form/Input';
 import { useAlert } from '@/components/extras/Alert';
-import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
-import loginResolver from '@/resolvers/LoginResolver'
+import Input from '@/components/shared/Form/Input';
+import loginResolver from '@/resolvers/LoginResolver';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useSignInMutation } from '@/store/api/auth';
+import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
+import { Box, Button, CircularProgress, IconButton } from '@mui/material';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { loginAction } from './actions/login';
 import { useRouter } from 'next/navigation';
 
 const LoginForm = () => {
@@ -17,25 +17,26 @@ const LoginForm = () => {
   const {
     register,
     handleSubmit, formState: { errors } } = useForm({
-        resolver: yupResolver(loginResolver),
-      });
+      resolver: yupResolver(loginResolver),
+    });
 
   const { setAlert } = useAlert();
-  const [logIn, { isLoading, error }] = useSignInMutation();
   const router = useRouter();
-
-  const handleLogin = (data: any) => {
-    console.log("--> submitted data: ", data);
-    logIn(data).unwrap().then((res: any) => {
-      console.log("--> res: ", res);
-      router.push('/');
-    }).catch((err: any) => {
-      console.log("--> err: ", err);
+  const handleLogin = async (data: any) => {
+    try {
+      await loginAction(data);
       setAlert({
-        text: err?.message ?? "Invalid username or password",
+        text: 'User logged in successfully',
+        severity: 'success',
+      });
+      router.push('/');
+    } catch (error) {
+      setAlert({
+        text: 'User login failed',
         severity: 'error',
-      })
-    });
+      });
+    }
+
   }
 
 
@@ -83,11 +84,11 @@ const LoginForm = () => {
       </Box>
       <Box>
         <Button fullWidth variant='contained' type='submit'
-          disabled={isLoading}
+          disabled={false}
         >
           Login
           <CircularProgress sx={{
-            display: isLoading ? 'inline-block' : 'none',
+            display: false ? 'inline-block' : 'none',
             marginLeft: '1rem',
             color: 'white',
           }} size={20} />

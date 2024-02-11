@@ -1,8 +1,8 @@
 import * as yup from "yup";
 
 const schema = yup.object().shape({
-  firstname: yup.string(),
-  lastname: yup.string(),
+  firstName: yup.string().required("This field is required"),
+  lastName: yup.string().required("This field is required"),
   email: yup.string()
     .email("must be a valid email")
     .required("This field is required"),
@@ -18,7 +18,6 @@ const schema = yup.object().shape({
     .matches(/[a-z]/, "Password must contain at least one lowercase letter")
     .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character")
     .required("This field is required"),
-  // dashboard: yup.string().required("This field is required"),
 });
 
 export default schema;

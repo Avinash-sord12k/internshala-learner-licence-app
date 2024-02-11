@@ -1,5 +1,6 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 import { User } from "./User";
+import mongoose from "mongoose";
 
 class Session {
   @prop({ ref: () => User, required: true })
@@ -12,6 +13,6 @@ class Session {
   public expiresAt!: Date;
 }
 
-const SessionModel = getModelForClass(Session);
+const SessionModel = mongoose.models?.Session || getModelForClass(Session);
 
 export default SessionModel;

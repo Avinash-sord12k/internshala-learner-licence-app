@@ -1,5 +1,6 @@
 import RegisterForm from '@/components/specific/auth/RegisterForm'
 import { Box } from '@mui/material'
+import Link from 'next/link'
 import React from 'react'
 
 const RegisterPage = () => {
@@ -14,6 +15,7 @@ const RegisterPage = () => {
       boxShadow: '0px 0px 20px 0px #0000001a',
     }}>
       <RegisterForm />
+      <Link href="/login">Register</Link>
     </Box>
   )
 }

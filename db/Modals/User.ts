@@ -1,4 +1,7 @@
+import { UserRole } from "@/types/User.types";
 import { prop, getModelForClass } from "@typegoose/typegoose";
+import mongoose from "mongoose";
+
 
 export class User {
 
@@ -19,8 +22,11 @@ export class User {
 
   @prop({ required: true })
   mobileNumber?: string;
+
+  @prop({ required: true, default: UserRole.USER, enum: UserRole })
+  role!: string;
 }
 
-const UserModel = getModelForClass(User);
+const UserModel = mongoose.models?.User || getModelForClass(User);
 
 export default UserModel;

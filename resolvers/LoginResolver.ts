@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-const schema = yup.object().shape({
+const loginResolver = yup.object().shape({
   email: yup.string()
     .email("must be a valid email")
     .required("This field is required"),
@@ -15,4 +15,4 @@ const schema = yup.object().shape({
   // dashboard: yup.string().required("This field is required"),
 });
 
-export default schema;
+export default loginResolver;

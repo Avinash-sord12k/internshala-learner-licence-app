@@ -1,18 +1,17 @@
 "use client"
-import { Box, Button, CircularProgress, IconButton } from '@mui/material'
-import React from 'react'
-import { useForm } from 'react-hook-form';
-import Input from '@/components/shared/Form/Input';
 import { useAlert } from '@/components/extras/Alert';
-import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
-import RegisterResolver from '@/resolvers/RegisterResolver'
+import Input from '@/components/shared/Form/Input';
+import RegisterResolver from '@/resolvers/RegisterResolver';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { VisibilityOffOutlined, VisibilityOutlined } from '@mui/icons-material';
+import { Box, Button, CircularProgress, IconButton } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useRegisterMutation } from '@/store/api/auth';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { registerAction } from './actions/register';
+import PasswordInput from '@/components/shared/Form/PasswordInput';
 
 const RegisterForm = () => {
-
-  const [showPassword, setShowPassword] = React.useState(false);
 
   const {
     register,
@@ -22,17 +21,16 @@ const RegisterForm = () => {
 
   const { setAlert } = useAlert();
 
-  const [registerUser, { isLoading }] = useRegisterMutation();
-
   const handleRegister = async (data: any) => {
     console.log("--> submitted data: ", data);
-    registerUser({...data}).unwrap().then((res: any) => {
-      console.log("--> res: ", res);
-    }
-    ).catch((err: any) => {
-      console.log("--> err: ", err);
+    await registerAction(data).then(() => {
       setAlert({
-        text: err?.message ?? "Invalid username or password",
+        text: 'User registered successfully',
+        severity: 'success',
+      })
+    }).catch((error) => {
+      setAlert({
+        text: 'User registration failed',
         severity: 'error',
       })
     });
@@ -64,18 +62,18 @@ const RegisterForm = () => {
                 required
                 id='Register-firstname'
                 type='text'
-                name='firstname'
+                name='firstName'
                 register={register}
-                error={errors.firstname}
+                error={errors.firstName}
                 label="First Name" />
 
               <Input
                 required
                 id='Register-lastname'
                 type='text'
-                name='lastname'
+                name='lastName'
                 register={register}
-                error={errors.firstname}
+                error={errors.firstName}
                 label="Lastname" />
             </Box>
 
@@ -106,24 +104,14 @@ const RegisterForm = () => {
               error={errors.address}
               label="Address" />
 
-            <Input
+            <PasswordInput
               required
               id='Register-password'
-              type={showPassword ? 'text' : 'password'}
               name='password'
               register={register}
               error={errors.password}
               label="Password"
-              inputProps={{
-                endAdornment: <Box>
-                  <IconButton onClick={() => { setShowPassword(o => !o) }}>
-                    {
-                      showPassword ? <VisibilityOffOutlined /> : <VisibilityOutlined />
-                    }
-                  </IconButton>
-                </Box>
-
-              }} />
+            />
           </Box>
           <Box>
             <Button

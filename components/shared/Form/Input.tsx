@@ -7,7 +7,6 @@ interface InputProps {
   label: string;
   name: string;
   required?: boolean;
-  // maxWidth?: string;
   fullWidth?: boolean;
   register?: any;
   extraProps?: any;
@@ -15,7 +14,7 @@ interface InputProps {
     endAdornment?: React.ReactNode;
   };
   error?: any;
-  fref?: any; // Renamed from fref to ref for consistency with React forwardRef
+  fref?: any;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>((
@@ -45,7 +44,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((
       rows={type === 'textarea' ? 4 : undefined}
       id={id}
       type={type}
-      // label={label}
       variant='outlined'
       fullWidth={fullWidth}
       InputProps={inputProps}
