@@ -43,16 +43,12 @@ const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     <AlertContext.Provider value={memoizedValue}>
       {children}
       <AnimatePresence>
-        {alert && (
-          <motion.div // Wrap the CustomAlert component with motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <CustomAlert severity={alert.severity} text={alert.text} setAlert={setAlert} />
-          </motion.div>
-        )}
+        <CustomAlert
+          show={!!alert}
+          severity={alert?.severity ?? 'info'}
+          text={alert?.text ?? ''}
+          setAlert={setAlert}
+        />
       </AnimatePresence>
     </AlertContext.Provider>
   );
@@ -67,10 +63,12 @@ const useAlert = () => {
   return context;
 };
 
-const CustomAlert: React.FC<AlertProps & { setAlert: React.Dispatch<React.SetStateAction<AlertProps | null>> }> = ({ text, severity, setAlert }) => {
-  if (!text || !severity) {
-    return null; // Return null if there's no alert to display
-  }
+const CustomAlert: React.FC<AlertProps & {
+  setAlert: React.Dispatch<React.SetStateAction<AlertProps | null>>
+  show: boolean;
+}> = ({ text, severity, setAlert, show }) => {
+
+  const ShowAlert = show && (!!text || !!severity);
 
   const handleClose = () => {
     setAlert(null); // Set the alert to null to close it
@@ -88,44 +86,49 @@ const CustomAlert: React.FC<AlertProps & { setAlert: React.Dispatch<React.SetSta
     borderColor = 'blue';
   }
 
+  // if (!ShowAlert) {
+  //   return null;
+  // }
 
   return (
-    <Box
-      sx={(theme) => ({
-        position: 'fixed',
-        top: '30px',
-        left: '50%',
-        transform: `translate(-50%, ${text ? '10%' : '-300%'})`,
-        transition: 'transform 0.3s ease-in-out',
-        zIndex: 9999,
-        width: '90%',
-        [theme.breakpoints.up('sm')]: {
-          width: '50%',
-        },
-        [theme.breakpoints.up('md')]: {
-          width: '500px',
-        },
-      })}
-    >
-      <Alert
-        sx={{
-          width: '100%',
-          borderLeft: `5px solid ${borderColor}`,
-          '& .MuiAlert-icon': {
-            fontSize: '1.5rem',
-          },
-        }}
-        elevation={3}
-        severity={severity}
-        action={
-          <IconButton color="inherit" size="small" onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        }
-      >
-        {text}
-      </Alert>
-    </Box>
+    <AnimatePresence>
+      {ShowAlert &&
+        <motion.div
+          key="alert"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            zIndex: 1000,
+            width: '100%',
+          }}
+          initial={{ opacity: 0, y: -100 }}
+          animate={{ opacity: 1, y: 10 }}
+          exit={{ opacity: 0, y: -100 }}
+          transition={{ duration: 0.3, type: 'tween' }}
+        >
+          <Alert
+            sx={{
+              width: '100%',
+              maxWidth: 400,
+              margin: '0 auto',
+              borderLeft: `5px solid ${borderColor}`,
+              '& .MuiAlert-icon': {
+                fontSize: '1.5rem',
+              },
+            }}
+            elevation={3}
+            severity={severity}
+            action={
+              <IconButton color="inherit" size="small" onClick={handleClose}>
+                <CloseIcon />
+              </IconButton>
+            }
+          >
+            {text}
+          </Alert>
+        </motion.div>}
+    </AnimatePresence>
   );
 };
 

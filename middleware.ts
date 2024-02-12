@@ -1,4 +1,4 @@
-import { jwtDecrypt, jwtVerify } from "jose";
+import { jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middelware(req: NextRequest, res: NextResponse) {
@@ -20,10 +20,14 @@ export default async function middelware(req: NextRequest, res: NextResponse) {
     return NextResponse.redirect(`${req.nextUrl.origin}/login`);
   }
 
-  const dataInToken = await jwtVerify(token, secret);
-  console.log('-> dataInToken: ', dataInToken);
+  try {
+    const dataInToken = await jwtVerify(token, secret);
+    console.log('-> dataInToken: ', dataInToken);
 
-  return NextResponse.next();
+    return NextResponse.next();
+  } catch (error) {
+    return NextResponse.redirect(`${req.nextUrl.origin}/login`);
+  }
 
 }
 
@@ -37,6 +41,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|login).*)',
   ],
 }

@@ -2,6 +2,7 @@ import { Montserrat } from 'next/font/google'
 import { createTheme } from '@mui/material/styles'
 
 import { Colors } from './colors';
+import BorderedBox from '../components/shared/Form/layouts/BorderedBox';
 
 const font = Montserrat({
   weight: ['300', '400', '500', '700'],
@@ -11,9 +12,7 @@ const font = Montserrat({
 
 declare module '@mui/material/styles' {
   interface Components {
-    MainMenuFrameComponent: {},
-    GameButtonComponent: {},
-    Button: {}
+    BorderedBox: {}
   }
 }
 
@@ -42,61 +41,18 @@ export const theme = createTheme({
     fontFamily: font.style.fontFamily
   },
 
+  shape: {
+    borderRadius: 0
+  },
+
   components: {
-    MainMenuFrameComponent: {
+    BorderedBox: {
       styleOverrides: {
         root: {
-          width: 250,
-          height: 400,
-          border: `12px ${Colors.primary}`,
-          borderStyle: 'ridge solid',
-          borderRadius: '36px',
+          borderRadius: 12,
+          border: `1px solid ${Colors.primary}`
         }
-      }
-    },
-    GameButtonComponent: {
-      styleOverrides: {
-        root: {
-          width: 200,
-          height: 40,
-          borderTop: `1px solid ${Colors.lime_green}`,
-          borderLeft: `1px solid ${Colors.lime_green}`,
-          background: Colors.secondary,
-          clipPath: `polygon(
-                        4% 0,
-                        100% 0,
-                        100% 80%,
-                        94% 100%,
-                        0 100%,
-                        0 20%
-                    )`,
-          '&:hover': {
-            border: 'none',
-            background: Colors.primary
-          }
-        }
-      }
-    },
-    Button: {
-      styleOverrides: {
-        root: {
-          textTransform: 'none',
-          borderRadius: 0,
-        },
-        contained: {
-          boxShadow: 'none',
-          '&:hover': {
-            boxShadow: 'none',
-            scale: 1.1
-          }
-        },
-        outlined: {
-          border: `1px solid ${Colors.primary}`,
-          '&:hover': {
-            border: `1px solid ${Colors.primary}`,
-          }
-        },
-      }
+      },
     }
   }
 })
