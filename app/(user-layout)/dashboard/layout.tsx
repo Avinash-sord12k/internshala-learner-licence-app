@@ -4,7 +4,7 @@ import SidebarProvider from '@/context/sidebar'
 import { Box } from '@mui/material'
 import React from 'react'
 
-const AdminLayout = ({
+const LearnersLayout = ({
   children
 }: {
   children: React.ReactNode
@@ -12,7 +12,7 @@ const AdminLayout = ({
   return (
     <Box>
       <SidebarProvider>
-        <Sidebar links={config.AdminPages}>
+        <Sidebar links={config.UserPages}>
           {children}
         </Sidebar>
       </SidebarProvider>
@@ -20,4 +20,4 @@ const AdminLayout = ({
   )
 }
 
-export default AdminLayout
+export default LearnersLayout

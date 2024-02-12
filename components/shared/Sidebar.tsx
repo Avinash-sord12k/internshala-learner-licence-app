@@ -1,40 +1,24 @@
 "use client";
 import { useSidebar } from '@/context/sidebar';
-import { Assignment, DashboardCustomizeOutlined, SupervisedUserCircleOutlined } from '@mui/icons-material';
 import ChevronLeftOutlinedIcon from '@mui/icons-material/ChevronLeftOutlined';
 import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Avatar, Box, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Tooltip, useMediaQuery } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { useMemo } from 'react';
+import React from 'react';
 import Logo from '../extras/Logo';
 
 interface Links {
   title: string;
-  icon: React.ReactNode;
+  icon: any;
   url: string;
 }
 
-const Sidebar = ({ children }: { children: React.ReactNode }) => {
-
-  const links: Links[] = useMemo(() => [
-    {
-      title: 'Admin Dashboard',
-      icon: <DashboardCustomizeOutlined />,
-      url: '/admin',
-    },
-    {
-      title: 'Users',
-      icon: <SupervisedUserCircleOutlined />,
-      url: '/admin/users',
-    },
-    {
-      title: 'Create Test',
-      icon: <Assignment />,
-      url: '/admin/create-test',
-    }
-  ], []);
+const Sidebar = ({ children, links }: {
+  children: React.ReactNode,
+  links: Links[]
+}) => {
 
   const userData = null;
 
@@ -105,7 +89,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
         <List>
           <Logo
             sx={{
-              justifyContent:'center',
+              justifyContent: 'center',
               alignItems: 'center',
               overflow: 'hidden',
               width: '100%',
@@ -151,7 +135,7 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
                     }}>
                       <Tooltip title={item.title} placement="right-end">
                         <div>
-                          {item.icon}
+                          <item.icon />
                         </div>
                       </Tooltip>
                     </ListItemIcon>

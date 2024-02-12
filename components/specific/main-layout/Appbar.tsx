@@ -126,14 +126,14 @@ export default function PrimarySearchAppBar() {
             px: '0 !important',
           }}>
             <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              sx={{ mr: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
 
             <Box sx={{ flexGrow: 1 }}>
               <Stack
@@ -160,33 +160,17 @@ export default function PrimarySearchAppBar() {
                 >
                   {config.Appname}
                 </Typography>
-                <Link href={'/results'}>
-                  <Typography
-                    lineHeight={1}
-                    variant="subtitle1"
-                    component="p"
-                    fontWeight={400} gutterBottom>
-                    Results
-                  </Typography>
-                </Link>
-                <Link href={'/students'}>
-                  <Typography
-                    lineHeight={1}
-                    variant="subtitle1"
-                    component="p"
-                    fontWeight={400} gutterBottom>
-                    Student Login
-                  </Typography>
-                </Link>
-                <Link href={'/admin'}>
-                  <Typography
-                    lineHeight={1}
-                    variant="subtitle1"
-                    component="p"
-                    fontWeight={400} gutterBottom>
-                    Admin Login
-                  </Typography>
-                </Link>
+                {config.PublicPageAppbarLinks.map((link) => (
+                  <Link href={link.url} key={link.title}>
+                    <Typography
+                      lineHeight={1}
+                      variant="subtitle1"
+                      component="p"
+                      fontWeight={400} gutterBottom>
+                      {link.title}
+                    </Typography>
+                  </Link>
+                ))}
               </Stack>
             </Box>
 
