@@ -4,58 +4,20 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Container } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import InputBase from '@mui/material/InputBase';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { alpha, styled } from '@mui/material/styles';
+import Link from 'next/link';
 import * as React from 'react';
+import MenuIcon from '@mui/icons-material/Menu';
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
 
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -160,8 +122,10 @@ export default function PrimarySearchAppBar() {
     <Box>
       <AppBar position="static">
         <Container>
-          <Toolbar>
-            {/* <IconButton
+          <Toolbar sx={{
+            px: '0 !important',
+          }}>
+            <IconButton
             size="large"
             edge="start"
             color="inherit"
@@ -169,25 +133,63 @@ export default function PrimarySearchAppBar() {
             sx={{ mr: 2 }}
           >
             <MenuIcon />
-          </IconButton> */}
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ display: { xs: 'none', sm: 'block' } }}
-            >
-              {config.Appname}
-            </Typography>
-            {/* <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search> */}
-            <Box sx={{ flexGrow: 1 }} />
+          </IconButton>
+
+            <Box sx={{ flexGrow: 1 }}>
+              <Stack
+                direction="row"
+                spacing={2}
+                alignItems={'baseline'}
+                sx={{
+                  display: { xs: 'none', md: 'flex' },
+                  gap: 2,
+                  '& a': {
+                    textDecoration: 'none',
+                    color: 'white',
+                    '&:hover': {
+                      textDecoration: 'underline',
+                    },
+                  },
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  noWrap
+                  component="div"
+                  sx={{ display: { xs: 'none', sm: 'block' } }}
+                >
+                  {config.Appname}
+                </Typography>
+                <Link href={'/results'}>
+                  <Typography
+                    lineHeight={1}
+                    variant="subtitle1"
+                    component="p"
+                    fontWeight={400} gutterBottom>
+                    Results
+                  </Typography>
+                </Link>
+                <Link href={'/students'}>
+                  <Typography
+                    lineHeight={1}
+                    variant="subtitle1"
+                    component="p"
+                    fontWeight={400} gutterBottom>
+                    Student Login
+                  </Typography>
+                </Link>
+                <Link href={'/admin'}>
+                  <Typography
+                    lineHeight={1}
+                    variant="subtitle1"
+                    component="p"
+                    fontWeight={400} gutterBottom>
+                    Admin Login
+                  </Typography>
+                </Link>
+              </Stack>
+            </Box>
+
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                 <Badge badgeContent={4} color="error">

@@ -19,7 +19,7 @@ const FancySection = () => {
             flexDirection: 'column',
             gap: 4,
           },
-          gap: 4,
+          gap: { xs: 4, md: 8 },
         }}>
           <Box>
             <Typography variant="h4" component="h1" fontWeight={800} gutterBottom>
