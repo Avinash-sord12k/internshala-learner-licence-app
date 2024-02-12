@@ -18,8 +18,12 @@ const Logo = ({
       justifyContent: 'center',
       ...sx,
       transition: 'all 200ms ease-out', 
+      '& img': {
+        transition: 'all 200ms ease-out', 
+        filter: 'invert(1)',
+      },
     }}>
-      <Image src="/images/logo/logo-main.svg" alt="logo"
+      <Image src="/images/icon.png" alt="logo"
         width={width}
         height={height} />
     </Box>

@@ -1,28 +1,15 @@
 "use client";
-import React, { useMemo } from 'react';
-import { Box, IconButton, Avatar, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Tooltip, Divider, useMediaQuery } from '@mui/material';
-import LoyaltyIcon from '@mui/icons-material/Loyalty';
-import LogoutIcon from '@mui/icons-material/Logout';
-import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
-import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
-import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
-import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import Logo from '../extras/Logo';
+import { useSidebar } from '@/context/sidebar';
+import { Assignment, DashboardCustomizeOutlined, SupervisedUserCircleOutlined } from '@mui/icons-material';
 import ChevronLeftOutlinedIcon from '@mui/icons-material/ChevronLeftOutlined';
 import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
-import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
-import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
-import WidgetsIcon from '@mui/icons-material/Widgets';
-import { useMutation } from '@apollo/client';
-import LOGOUT_USER from '@/gql/auth/logout';
-import { useSidebar } from '@/context/sidebar';
-import BusinessIcon from '@mui/icons-material/Business';
-import SavingsIcon from '@mui/icons-material/Savings';
-import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
-import ReviewsIcon from '@mui/icons-material/Reviews';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Avatar, Box, Divider, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Tooltip, useMediaQuery } from '@mui/material';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import React, { useMemo } from 'react';
+import Logo from '../extras/Logo';
+
 interface Links {
   title: string;
   icon: React.ReactNode;
@@ -33,75 +20,27 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
 
   const links: Links[] = useMemo(() => [
     {
-      title: 'Sales',
-      icon: <LoyaltyIcon />,
-      url: '/',
-    },
-    {
-      title: 'Products',
-      icon: <Inventory2OutlinedIcon />,
-      url: '/products',
-    },
-    {
-      title: 'Brands',
-      icon: <BusinessIcon />,
-      url: '/brands',
-    },
-    {
-      title: 'Deals',
-      icon: <SavingsIcon />,
-      url: '/deals',
-    },
-    {
-      title: 'Categories',
-      icon: <AccountTreeOutlinedIcon />,
-      url: '/categories',
-    },
-    {
-      title: 'Reviews',
-      icon: <ReviewsIcon />,
-      url: '/reviews',
-    },
-    {
-      title: 'Groups',
-      icon: <WidgetsIcon />,
-      url: '/groups',
-    },
-    {
-      title: 'Orders',
-      icon: <LocalShippingOutlinedIcon />,
-      url: '/orders',
-    },
-    {
-      title: 'Coupons',
-      icon: <CardGiftcardIcon />,
-      url: '/coupons',
+      title: 'Admin Dashboard',
+      icon: <DashboardCustomizeOutlined />,
+      url: '/admin',
     },
     {
       title: 'Users',
-      icon: <GroupOutlinedIcon />,
-      url: '/users',
+      icon: <SupervisedUserCircleOutlined />,
+      url: '/admin/users',
     },
     {
-      title: 'Content',
-      icon: <FolderOpenOutlinedIcon />,
-      url: '/content',
-    },
-    {
-      title: 'Profile',
-      icon: <AccountCircleOutlinedIcon />,
-      url: '/profile',
-    },
-    {
-      title: 'Test Page',
-      icon: <ScienceOutlinedIcon />,
-      url: '/test',
-    },
+      title: 'Create Test',
+      icon: <Assignment />,
+      url: '/admin/create-test',
+    }
   ], []);
 
   const userData = null;
 
-  const [logout] = useMutation(LOGOUT_USER);
+  const logout = async () => {
+    console.log(" --> logout");
+  }
 
   const handleLogout = async () => {
     try {
@@ -113,9 +52,6 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
     }
   }
 
-  // const isMediumScreen = useMediaQuery('(max-width:960px)');
-  // const [isCollapsed, setIsCollapsed] = React.useState<boolean>(true);
-  // const [showText, setShowText] = React.useState<boolean>(false);
   const { isCollapsed, setShowText, showText, setIsCollapsed } = useSidebar();
   const isMobile = useMediaQuery('(max-width:600px)');
 
@@ -157,9 +93,9 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
           minWidth: isCollapsed ? '60px' : '250px',
           maxWidth: isCollapsed ? '60px' : '250px',
           '@media (max-width: 600px)': {
-            // minWidth: isCollapsed ? '60px' : '100%',
             maxWidth: '100vw',
           },
+          pt: '2rem',
           backgroundColor: 'primary.main',
           color: 'primary.contrastText',
           transition: 'all 200ms ease-out',
@@ -169,18 +105,15 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
         <List>
           <Logo
             sx={{
-              justifyContent: !isCollapsed ? 'flex-start' : 'center',
+              justifyContent:'center',
               alignItems: 'center',
-              borderRadius: isCollapsed ? '9999px' : '0px',
               overflow: 'hidden',
               width: '100%',
-              pl: !isCollapsed ? '1rem' : '',
-              mt: !isCollapsed ? '1rem' : '0rem',
               mb: '3rem',
               transition: 'width 200ms ease-out, height 200ms ease-out',
             }}
-            width={!showText ? 40 : 60}
-            height={!showText ? 40 : 60}
+            width={isCollapsed ? 40 : 60}
+            height={isCollapsed ? 40 : 60}
           />
 
           <SidebarToggler
@@ -280,14 +213,14 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
       </Stack>
       <Box
         sx={{
-          ml: isCollapsed ? 20 : 68,
+          ml: isCollapsed ? 14 : 35,
           '@media (max-width: 1000px)': {
-            ml: 20,
+            ml: 13,
           },
           '@media (max-width: 600px)': {
-            ml: 5,
+            ml: 2,
           },
-          mr: 5,
+          mr: 2,
           py: 5,
           display: 'flex',
           flexDirection: 'column',
@@ -301,37 +234,6 @@ const Sidebar = ({ children }: { children: React.ReactNode }) => {
         }}>
         <Box className="main-body">
           {children}
-        </Box>
-        <Box
-          className="footer"
-          sx={{
-            bottom: 0,
-            position: 'relative',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            mt: 5,
-            mb: 2,
-            color: 'primary.main',
-            fontSize: '1rem',
-            '& a': {
-              color: 'primary.main',
-              textDecoration: 'none',
-              ml: 1,
-              fontWeight: 'bold',
-              '&:hover': {
-                color: 'primary.dark',
-              }
-            },
-            '& *': {
-              textAlign: 'center',
-            }
-          }}>
-          <Box>&copy; {new Date().getFullYear()} Ecommerce - Big Deal | All Rights Reserved</Box>
-          <Box>Desigend and Developed by
-            <a href="https://www.stackkaroo.com" target="_blank" rel="noopener noreferrer">Stackkaroo</a>
-          </Box>
         </Box>
       </Box>
     </>
