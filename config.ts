@@ -73,5 +73,10 @@ export default {
       icon: AccountCircleOutlined,
       url: '/dashboard/profile',
     }
+  ],
+  AllowedContexts: [
+    'email',
+    'role',
+    'userId',
   ]
 }
