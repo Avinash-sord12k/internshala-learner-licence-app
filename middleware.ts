@@ -27,6 +27,8 @@ export default async function middelware(req: NextRequest, res: NextResponse) {
     return NextResponse.redirect(`${req.nextUrl.origin}/login`);
   }
 
+  const reqHeaders: any = {};
+
   try {
     const dataInToken = await jwtVerify(token, secret);
     console.log('-> dataInToken: ', dataInToken);
@@ -39,14 +41,17 @@ export default async function middelware(req: NextRequest, res: NextResponse) {
       if (req.headers.get(key) || req.nextUrl.searchParams.get(key)) {
         throw new Error(`Key ${key} is being spoofed. Blocking this request.`);
       }
-
-      // req.headers.set(key, (dataInToken.payload as any)[key]);
-      // res.headers.set(key, (dataInToken.payload as any)[key]);
-      req.headers.set('hii', 'byee');
-      console.log(req.headers.get('hii'));
+      reqHeaders[key] = (dataInToken.payload as any)[key];
     }
 
-    return NextResponse.next();
+    return NextResponse.rewrite(req.nextUrl.href, {
+      headers: {
+        ...req.headers,
+        ...reqHeaders,
+      },
+      statusText: 'rewritten in api',
+    });
+
   } catch (error) {
     console.log('-> error: ', error);
     return NextResponse.redirect(`${req.nextUrl.origin}/login`);
