@@ -27,6 +27,19 @@ export class User {
   role!: string;
 }
 
-const UserModel = mongoose.models?.User || getModelForClass(User);
+const UserModel = mongoose.models?.User || getModelForClass(User, {
+  schemaOptions: {
+    timestamps: true,
+    toObject: {
+      virtuals: true,
+      getters: true,
+      transform: (doc, ret) => {
+        ret.id = ret._id.toString();
+        delete ret._id;
+        delete ret.__v;
+      }
+    },
+  },
+});
 
 export default UserModel;

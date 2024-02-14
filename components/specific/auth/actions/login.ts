@@ -8,6 +8,7 @@ import { SignInDto } from "@/types/Auth.types";
 import bcrypt from "bcrypt";
 import { SignJWT } from "jose";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const loginAction = async (data: SignInDto) => {
   await cahchedConnect();
@@ -37,7 +38,7 @@ export const loginAction = async (data: SignInDto) => {
         secure: true
       });
 
-      return true;
+      // return true;
     }
 
     else {
@@ -68,11 +69,13 @@ export const loginAction = async (data: SignInDto) => {
         secure: true
       });
 
-      return true;
+      // return true;
     }
 
   } catch (error) {
     console.log("🚀 ~ POST ~ error:", error)
     throw new Error("User registration failed");
   }
+
+  redirect("/");
 }

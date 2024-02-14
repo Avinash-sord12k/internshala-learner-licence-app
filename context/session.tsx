@@ -1,42 +1,59 @@
 'use client';
-import GET_SESSION from "@/gql/auth/session";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { getSession } from "./actions/getSession";
 
 interface SessionUserType {
   id: string;
   email: string;
-  fname: string;
-  lname: string;
+  firstName: string;
+  lastName: string;
   role: string;
   createdAt: string;
 }
 
 interface SessionType {
   sessionUser: SessionUserType | null;
-  setSessionUser: React.Dispatch<React.SetStateAction<SessionUserType | null>>;
   refetch?: () => void;
+  loading?: boolean;
 }
 
 const SessionContext = createContext<SessionType>({
   sessionUser: null,
-  setSessionUser: () => null,
+  refetch: () => { }
 })
 
 const SessionProvider = ({ children }: { children: React.ReactNode }) => {
   const [sessionUser, setSessionUser] = useState<SessionUserType | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const { data, loading, error, refetch } = useQuery(GET_SESSION);
-  // console.log("🚀 ~ SessionProvider ~ data:", data)
+  const refetch = async () => {
+    setLoading(true);
+    await getSession().then((res: any) => {
+      setSessionUser(res);
+    }).catch((error) => {
+      console.log('error', error);
+    }).finally(() => {
+      setLoading(false);
+    });
+  }
 
   useEffect(() => {
-    if (data) {
-      setSessionUser(data.getUserSession);
-    }
-  }, [data]);
+    setLoading(true);
+    getSession().then((res: any) => {
+      console.log('res', res);
+      setSessionUser(res);
+      setLoading(false);
+    }).catch((error) => {
+      console.log('error', error);
+    }).finally(() => {
+      setLoading(false);
+    });
+  }, []);
+
+  const contextValue = useMemo(() => ({ sessionUser, refetch, loading }), [sessionUser, refetch, loading]);
 
   return (
-    <SessionContext.Provider value={{ sessionUser, setSessionUser, refetch }}>
+    <SessionContext.Provider value={contextValue}>
       {children}
     </SessionContext.Provider>
   )

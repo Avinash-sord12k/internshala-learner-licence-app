@@ -1,6 +1,5 @@
 import { jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
-// import { withContext } from "./context";
 
 const allowedKeys = [
   'email',
@@ -54,7 +53,7 @@ export default async function middelware(req: NextRequest, res: NextResponse) {
 
   } catch (error) {
     console.log('-> error: ', error);
-    return NextResponse.redirect(`${req.nextUrl.origin}/login`);
+    return NextResponse.redirect(`${req.nextUrl.origin}/`);
   }
 
 
@@ -70,6 +69,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|login).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|login|register).*)',
   ],
 }

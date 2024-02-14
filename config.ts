@@ -10,24 +10,12 @@ export default {
   Appname: "Learn To Drive",
   PublicPageAppbarLinks: [
     {
-      title: 'Home',
-      url: '/',
-    },
-    {
       title: 'About',
       url: '/about',
     },
     {
       title: 'Contact',
       url: '/contact',
-    },
-    {
-      title: 'Login',
-      url: '/login',
-    },
-    {
-      title: 'Register',
-      url: '/register',
     },
   ],
   AdminPages: [
@@ -74,9 +62,4 @@ export default {
       url: '/dashboard/profile',
     }
   ],
-  AllowedContexts: [
-    'email',
-    'role',
-    'userId',
-  ]
 }

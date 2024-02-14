@@ -29,7 +29,8 @@ const LoginForm = () => {
         text: 'User logged in successfully',
         severity: 'success',
       });
-      router.push('/');
+      // router.push('/');
+      // window.location.href = '/';
     } catch (error) {
       setAlert({
         text: 'User login failed',

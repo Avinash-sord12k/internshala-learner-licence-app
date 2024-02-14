@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import ThemeRegistry from '@/theme/ThemeRegistry'
 import AppProvider from "@/store/provider";
+import { SessionProvider } from "@/context/session";
 
 
 export const metadata: Metadata = {
@@ -18,9 +19,11 @@ export default function RootLayout({
     <html lang="en">
       <AppProvider>
         <ThemeRegistry >
-          <body>
-            {children}
-          </body>
+          <SessionProvider>
+            <body>
+              {children}
+            </body>
+          </SessionProvider>
         </ThemeRegistry>
       </AppProvider>
     </html>

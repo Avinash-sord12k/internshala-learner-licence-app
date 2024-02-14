@@ -1,10 +1,11 @@
 'use client';
 import config from '@/config';
+import { useSession } from '@/context/session';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Container, Stack } from '@mui/material';
+import { Button, Container, Skeleton, Stack } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
@@ -15,11 +16,18 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 import * as React from 'react';
-import MenuIcon from '@mui/icons-material/Menu';
+import { logout } from '../auth/actions/logout';
 
 
 
 export default function PrimarySearchAppBar() {
+
+  const { sessionUser, loading, refetch } = useSession();
+
+  if (!sessionUser && !loading) {
+    refetch?.();
+  }
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -49,7 +57,7 @@ export default function PrimarySearchAppBar() {
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{
-        vertical: 'top',
+        vertical: 'bottom',
         horizontal: 'right',
       }}
       id={menuId}
@@ -62,7 +70,8 @@ export default function PrimarySearchAppBar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Dashboard</MenuItem>
+      <MenuItem onClick={() => { logout(); handleMenuClose(); }}>Logout</MenuItem>
     </Menu>
   );
 
@@ -118,6 +127,26 @@ export default function PrimarySearchAppBar() {
     </Menu>
   );
 
+  const IfNotSession = () => (
+    loading
+      ? <Stack direction="row" gap={2} alignItems={'center'}>
+        <Skeleton variant="circular" width={40} height={40} />
+        <Skeleton variant="rounded" width={100} height={20} />
+      </Stack>
+      : <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+        <Link href="/login">
+          <Button>
+            Login
+          </Button>
+        </Link>
+        <Link href="/register">
+          <Button>
+            Register
+          </Button>
+        </Link>
+      </Box>
+  )
+
   return (
     <Box>
       <AppBar position="static">
@@ -125,7 +154,7 @@ export default function PrimarySearchAppBar() {
           <Toolbar sx={{
             px: '0 !important',
           }}>
-            <IconButton
+            {/* <IconButton
               size="large"
               edge="start"
               color="inherit"
@@ -133,7 +162,7 @@ export default function PrimarySearchAppBar() {
               sx={{ mr: 2 }}
             >
               <MenuIcon />
-            </IconButton>
+            </IconButton> */}
 
             <Box sx={{ flexGrow: 1 }}>
               <Stack
@@ -156,7 +185,10 @@ export default function PrimarySearchAppBar() {
                   variant="h6"
                   noWrap
                   component="div"
-                  sx={{ display: { xs: 'none', sm: 'block' } }}
+                  sx={{
+                    display: { xs: 'none', sm: 'block' },
+                    cursor: 'pointer'
+                  }}
                 >
                   {config.Appname}
                 </Typography>
@@ -174,33 +206,35 @@ export default function PrimarySearchAppBar() {
               </Stack>
             </Box>
 
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={4} color="error">
-                  <MailIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                size="large"
-                aria-label="show 17 new notifications"
-                color="inherit"
-              >
-                <Badge badgeContent={17} color="error">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-            </Box>
+            {sessionUser?.id ?
+              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                  <Badge badgeContent={4} color="error">
+                    <MailIcon />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  size="large"
+                  aria-label="show 17 new notifications"
+                  color="inherit"
+                >
+                  <Badge badgeContent={17} color="error">
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+              </Box>
+              : <IfNotSession />}
             <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
               <IconButton
                 size="large"
@@ -218,6 +252,6 @@ export default function PrimarySearchAppBar() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-    </Box>
+    </Box >
   );
 }
