@@ -28,6 +28,10 @@ export default function PrimarySearchAppBar() {
     refetch?.();
   }
 
+  const menuLinks = sessionUser?.role === 'ADMIN'
+    ? config.AdminPages
+    : config.UserPages;
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -55,22 +59,38 @@ export default function PrimarySearchAppBar() {
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
+      sx={{
+        '& .MuiMenu-paper': {
+          top: '40px !important',
+        },
+        '& *': {
+          color: 'black',
+          textDecoration: 'none',
+        },
+      }}
       anchorEl={anchorEl}
       anchorOrigin={{
-        vertical: 'bottom',
+        vertical: 'top',
         horizontal: 'right',
       }}
       id={menuId}
       keepMounted
       transformOrigin={{
-        vertical: 'top',
+        vertical: 'bottom',
         horizontal: 'right',
       }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Dashboard</MenuItem>
+      {
+        menuLinks.map((link) => (
+          <Link href={link.url} key={link.title}>
+            <MenuItem onClick={handleMenuClose}>
+              {link.title}
+            </MenuItem>
+          </Link>
+        ))
+      }
       <MenuItem onClick={() => { logout(); handleMenuClose(); }}>Logout</MenuItem>
     </Menu>
   );
